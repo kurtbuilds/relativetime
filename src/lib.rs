@@ -6,6 +6,7 @@ pub trait RelativeTime {
 
 pub trait NegativeRelativeTime: RelativeTime {
     /// Returns a human readable string representing the time difference
+    /// std::time::Duration cannot be negative, so we need a separate trait to providde past durations
     fn to_relative_in_past(&self) -> String;
 }
 
@@ -82,7 +83,7 @@ impl RelativeTime for chrono::Duration {
 mod tests {
     use std::time::Duration;
     use chrono::Utc;
-    use super::*;
+    use crate::{NegativeRelativeTime, RelativeTime};
 
     #[test]
     fn test_std_duration() {
