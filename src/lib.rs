@@ -1,3 +1,4 @@
+use chrono::{TimeZone, Utc};
 
 pub trait RelativeTime {
     /// Returns a human readable string representing the time difference
@@ -69,8 +70,23 @@ impl NegativeRelativeTime for std::time::Duration {
 impl RelativeTime for chrono::Duration {
     fn to_relative(&self) -> String {
         let secs = self.num_seconds();
-        let relative = english_relative_time(secs);
-        if self.lt(&chrono::Duration::zero()) {
+        let relative = english_relative_time(secs.abs());
+        if secs < 0 {
+            format!("{} ago", relative)
+        } else {
+            format!("in {}", relative)
+        }
+    }
+}
+
+#[cfg(feature = "chrono")]
+impl<Tz: TimeZone> RelativeTime for chrono::DateTime<Tz> {
+    fn to_relative(&self) -> String {
+        let duration = self.clone().signed_duration_since(Utc::now());
+        let secs = duration.num_seconds();
+        println!("secs = {}", secs);
+        let relative = english_relative_time(secs.abs());
+        if secs < 0 {
             format!("{} ago", relative)
         } else {
             format!("in {}", relative)
@@ -81,6 +97,7 @@ impl RelativeTime for chrono::Duration {
 
 #[cfg(test)]
 mod tests {
+    use std::ops::{Add, Sub};
     use std::time::Duration;
     use chrono::Utc;
     use crate::{NegativeRelativeTime, RelativeTime};
@@ -135,7 +152,15 @@ mod tests {
         let d = chrono::Duration::seconds(10);
         assert_eq!(d.to_relative(), "in a few seconds");
 
-        let d = chrono::Duration::seconds(-10);
-        assert_eq!(d.to_relative(), "a few seconds ago");
+        let d = chrono::Duration::minutes(-10);
+        assert_eq!(d.to_relative(), "10 minutes ago");
+    }
+
+    #[test]
+    fn test_chrono_datetime() {
+        let d = Utc::now().sub(chrono::Duration::days(1));
+        println!("{}", Utc::now());
+        println!("{}", d);
+        assert_eq!(d.to_relative(), "a day ago");
     }
 }
