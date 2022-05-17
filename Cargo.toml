@@ -5,7 +5,7 @@ license = "MIT"
 keywords = ["time", "parser", "duration", "diff", "datetime"]
 homepage = "https://github.com/kurtbuilds/timediff"
 repository = "https://github.com/kurtbuilds/timediff"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 categories = ["date-and-time"]
 
