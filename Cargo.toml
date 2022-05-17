@@ -1,0 +1,22 @@
+[package]
+name = "relativetime"
+description = """🦀 Rust library for printing human readable, relative time differences"""
+license = "MIT"
+keywords = ["time", "parser", "duration", "diff", "datetime"]
+homepage = "https://github.com/kurtbuilds/timediff"
+repository = "https://github.com/kurtbuilds/timediff"
+version = "0.1.0"
+edition = "2021"
+categories = ["date-and-time"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+name = "relativetime"
+path = "src/lib.rs"
+
+[features]
+chrono = ["dep:chrono"]
+
+[dependencies]
+chrono = {version = "0.4.19", optional = true}
+humantime = "2.1.0"
