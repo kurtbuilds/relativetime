@@ -1,4 +1,3 @@
-use chrono::{TimeZone, Utc};
 
 pub trait RelativeTime {
     /// Returns a human readable string representing the time difference
@@ -80,9 +79,9 @@ impl RelativeTime for chrono::Duration {
 }
 
 #[cfg(feature = "chrono")]
-impl<Tz: TimeZone> RelativeTime for chrono::DateTime<Tz> {
+impl<Tz: chrono::TimeZone> RelativeTime for chrono::DateTime<Tz> {
     fn to_relative(&self) -> String {
-        let duration = self.clone().signed_duration_since(Utc::now());
+        let duration = self.clone().signed_duration_since(chrono::Utc::now());
         let secs = duration.num_seconds();
         println!("secs = {}", secs);
         let relative = english_relative_time(secs.abs());
